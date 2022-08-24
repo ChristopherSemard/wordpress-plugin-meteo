@@ -17,6 +17,8 @@ function add_style()
 }
 add_action('admin_init', 'add_style');
 
+!get_option('city') ? add_option('city', 'Paris') : '';
+!get_option('unit') ? add_option('unit', 'metric') : '';
 
 function getDataMeteo()
 {

@@ -40,7 +40,7 @@ li {
     color: red;
 }
 .weather-box{
-    width: 250px;
+    width: 350px;
     margin-top: 1em;
     padding: 1em;
     display: flex;
