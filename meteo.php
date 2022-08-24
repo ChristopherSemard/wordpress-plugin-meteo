@@ -8,15 +8,6 @@ Version: 1.0
 Author URI: http://mon-siteweb.com/
 */
 
-function add_style()
-{
-    wp_register_style('meteo_css', plugins_url('/css/meteo.css', __FILE__));
-    wp_enqueue_style('meteo_css');
-    // wp_register_script('meteo_js', plugins_url('/js/meteo.js', __FILE__));
-    // wp_enqueue_script('meteo_js');
-}
-add_action('admin_init', 'add_style');
-
 !get_option('city') ? add_option('city', 'Paris') : '';
 !get_option('unit') ? add_option('unit', 'metric') : '';
 
@@ -104,65 +95,6 @@ function render_page()
         </form>
     </div>
 
-    <script>
-        let inputsAutocomplete = document.querySelectorAll(".cityAutocomplete");
-        let btn = document.querySelector("#addStep");
-        let divStep = document.querySelector("#divStep");
-        let deleteBtn = document.querySelectorAll(".deleteStep");
-
-        addInputsAutocomplete(inputsAutocomplete);
-
-        function addInputsAutocomplete(inputsAutocomplete) {
-            inputsAutocomplete.forEach((input) => {
-                input.addEventListener("keyup", () => {
-                    autocomplete(this.event.target);
-                });
-            });
-        }
-
-        async function autocomplete(input) {
-            let url = `https://api-adresse.data.gouv.fr/search/?q=${input.value}&type=municipality&autocomplete=1`;
-            let dataResponse = await fetch(url);
-            let data = await dataResponse.json();
-            let cities = [];
-            data.features.forEach((city) => {
-                cities.push({
-                    name: city.properties.name,
-                    context: city.properties.context,
-                });
-            });
-            removeElements(input);
-            cities.forEach((city) => {
-                let listItem = document.createElement("li");
-                //One common class name
-                listItem.classList.add("list-items");
-                listItem.classList.add("list-group-item");
-                listItem.style.cursor = "pointer";
-                listItem.setAttribute("onclick", `displayNames("${city.name}")`);
-                //Display matched part in bold
-                let word = city.name.replace(input.value, `<b>${input.value}</b>`);
-                //display the value in array
-                listItem.innerHTML = `<p>${word}</p><small class="text-muted">${city.context}</small>`;
-                input.parentElement.querySelector(".list").appendChild(listItem);
-            });
-        }
-
-        function displayNames(value) {
-            let element = this.event.target.parentElement;
-            let input =
-                element.parentElement.parentElement.querySelector(".cityAutocomplete");
-            input.value = value;
-            removeElements(element);
-        }
-
-        function removeElements(input) {
-            //clear all the item
-            let items = input.parentElement.querySelectorAll(".list-items");
-            items.forEach((item) => {
-                item.remove();
-            });
-        }
-    </script>
 <?php
 }
 
@@ -173,3 +105,21 @@ function register_mysettings()
     register_setting('my-options', 'unit');
 }
 add_action('admin_init', 'register_mysettings');
+
+function add_style()
+{
+    wp_register_style('meteo_css', plugins_url('/css/meteo.css', __FILE__));
+    wp_enqueue_style('meteo_css');
+    wp_register_script('meteo_js', plugins_url('/js/meteo.js', __FILE__));
+    wp_enqueue_script('meteo_js');
+}
+add_action('admin_init', 'add_style');
+
+function add_defer_attribute($tag, $handle)
+{
+    if ('meteo_js' !== $handle)
+        return $tag;
+    return str_replace(' src', ' defer="defer" src', $tag);
+}
+
+add_filter('script_loader_tag', 'add_defer_attribute', 10, 2);
