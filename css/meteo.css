@@ -1,0 +1,58 @@
+
+
+ /* City auto complete */
+ ul {
+    list-style: none;
+    padding: 0em;
+}
+
+ul li p {
+    margin-bottom: 0.2em;
+}
+
+li {
+    border-bottom: 1px solid var(--primary) !important;
+}
+
+.list {
+    position: absolute;
+    z-index: 1000;
+    background-color: #ffffff;
+    border-radius: 0 0 5px 5px;
+}
+
+.list-items {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.list-items:hover {
+    background-color: #f5f5f5;
+}
+
+.cityAutocomplete {
+    /* text-transform: capitalize; */
+}
+
+/* AFFICHAGE DE LA METEO */
+.weather-warning {
+    color: red;
+}
+.weather-box{
+    width: 250px;
+    margin-top: 1em;
+    padding: 1em;
+    display: flex;
+    background-color: #ffffff;
+    /* justify-content: space-between; */
+}
+.weather-box-infos{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 1em;
+}
+.weather-box-infos p, .weather-box-infos h2{
+    margin: 0;
+}
